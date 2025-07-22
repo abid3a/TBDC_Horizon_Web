@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
-import { MapPin, Users, BookOpen, MessageSquare } from 'lucide-react';
+import { BookOpen, MessageSquare, Heart } from 'lucide-react';
 import FilterBar from '../Common/FilterBar';
 import SidePeekPanel from '../Common/SidePeekPanel';
 import mockData from '../../data/mockData.json';
+import ConnectionCard from '../Common/ConnectionCard';
 
 const Connections: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedConnection, setSelectedConnection] = useState<any>(null);
+  const [favorites, setFavorites] = useState<string[]>(mockData.favorites || []);
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
 
   const { connections, sessions } = mockData;
 
-  const filteredConnections = connections.filter(connection =>
+  let filteredConnections = connections.filter(connection =>
     connection.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     connection.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
     connection.expertise.some(exp => exp.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+  if (showOnlyFavorites) {
+    filteredConnections = filteredConnections.filter(conn => favorites.includes(conn.id));
+  }
 
   const handleConnectionClick = (connection: any) => {
     setSelectedConnection(connection);
@@ -22,6 +28,14 @@ const Connections: React.FC = () => {
 
   const getLinkedSessionsForConnection = (sessionIds: string[]) => {
     return sessions.filter(session => sessionIds.includes(session.id));
+  };
+
+  const toggleFavorite = (connectionId: string) => {
+    setFavorites((prev) =>
+      prev.includes(connectionId)
+        ? prev.filter((id) => id !== connectionId)
+        : [...prev, connectionId]
+    );
   };
 
   return (
@@ -37,57 +51,24 @@ const Connections: React.FC = () => {
             <h1 className="text-2xl font-bold text-gray-900">Connections</h1>
             <p className="text-gray-600 mt-1">Manage your professional network and relationships</p>
           </div>
+          <button
+            className={`ml-4 flex items-center justify-center rounded-full p-2 border ${showOnlyFavorites ? 'bg-amber-100 border-amber-300' : 'bg-white border-gray-200'} shadow-sm hover:bg-amber-50 transition`}
+            onClick={() => setShowOnlyFavorites((v) => !v)}
+            title="Show favorites only"
+          >
+            <Heart className={`w-6 h-6 ${showOnlyFavorites ? 'text-amber-500 fill-amber-400' : 'text-gray-400'}`} fill={showOnlyFavorites ? '#fbbf24' : 'none'} />
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredConnections.map((connection) => (
-            <div
+            <ConnectionCard
               key={connection.id}
-              onClick={() => handleConnectionClick(connection)}
-              className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer"
-            >
-              <div className="flex items-start space-x-4 mb-4">
-                <img
-                  src={connection.avatar}
-                  alt={connection.name}
-                  className="w-16 h-16 rounded-full"
-                />
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 text-lg">{connection.name}</h3>
-                  <p className="text-gray-600 text-sm">{connection.title}</p>
-                  <p className="text-gray-500 text-sm">{connection.company}</p>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center text-sm text-gray-600">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  {connection.location}
-                </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <Users className="w-4 h-4 mr-2" />
-                  {connection.connections.toLocaleString()} connections
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <div className="flex flex-wrap gap-2">
-                  {connection.expertise.slice(0, 2).map((skill: string, index: number) => (
-                    <span
-                      key={index}
-                      className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                  {connection.expertise.length > 2 && (
-                    <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
-                      +{connection.expertise.length - 2} more
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
+              connection={connection}
+              isFavorite={favorites.includes(connection.id)}
+              onToggleFavorite={toggleFavorite}
+              onClick={handleConnectionClick}
+            />
           ))}
         </div>
       </div>
@@ -112,7 +93,7 @@ const Connections: React.FC = () => {
                 <p className="text-gray-600">{selectedConnection.title}</p>
                 <p className="text-gray-500">{selectedConnection.company}</p>
                 <div className="flex items-center mt-2 text-sm text-gray-500">
-                  <MapPin className="w-4 h-4 mr-1" />
+                  {/* MapPin className="w-4 h-4 mr-1" /> */}
                   {selectedConnection.location}
                 </div>
               </div>

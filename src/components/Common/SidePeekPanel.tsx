@@ -37,7 +37,7 @@ const SidePeekPanel: React.FC<SidePeekPanelProps> = ({
       />
       
       {/* Panel */}
-      <div className="ml-auto w-96 h-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
+      <div className="ml-auto w-1/2 max-w-3xl h-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
         <div className="h-full flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
