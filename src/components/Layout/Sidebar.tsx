@@ -33,7 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, setIsAuthent
   const [collapsed, setCollapsed] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem('theme') === 'dark';
+    return localStorage.getItem('theme') !== 'light';
   });
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -61,11 +61,11 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, setIsAuthent
     setDarkMode((prev) => {
       const next = !prev;
       if (next) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      } else {
         document.documentElement.classList.remove('dark');
         localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
       }
       return next;
     });
@@ -99,7 +99,9 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, setIsAuthent
           className={`p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-all ${collapsed ? 'mt-2' : ''}`}
           style={collapsed ? { alignSelf: 'center' } : {}}
         >
-          {collapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+          {collapsed
+            ? <ChevronRight className={`w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+            : <ChevronLeft className={`w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`} />}
         </button>
       </div>
 
@@ -142,14 +144,12 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, setIsAuthent
                       className={`w-full flex items-center ${collapsed ? 'justify-center' : 'space-x-3'} px-3 py-2 rounded-lg text-left transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300`}
                       title={collapsed ? item.label : undefined}
                       onClick={() => {
-                        console.log('Logout button clicked');
                         setShowLogoutModal(true);
                       }}
                     >
                       <Icon className="w-5 h-5" />
                       {!collapsed && <span className="font-medium">{item.label}</span>}
                     </button>
-                    {console.log('Logout modal open:', showLogoutModal)}
                     <ConfirmModal
                       isOpen={showLogoutModal}
                       title="Confirm Logout"
@@ -186,10 +186,10 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, setIsAuthent
         <button
           onClick={handleToggleDark}
           className={`flex items-center ${collapsed ? 'justify-center' : 'space-x-2'} w-full px-2 py-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition`}
-          title={collapsed ? (darkMode ? 'Light mode' : 'Dark mode') : undefined}
+          title={collapsed ? (darkMode ? 'Dark mode' : 'Light mode') : undefined}
         >
-          {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          {!collapsed && <span>{darkMode ? 'Light mode' : 'Dark mode'}</span>}
+          {darkMode ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+          {!collapsed && <span>{darkMode ? 'Dark mode' : 'Light mode'}</span>}
         </button>
         {/* Profile */}
         <div className="relative">
