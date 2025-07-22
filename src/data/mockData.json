@@ -1,0 +1,302 @@
+{
+  "sessions": [
+    {
+      "id": "s1",
+      "title": "Strategic Growth Planning",
+      "type": "Strategy",
+      "date": "2025-01-25",
+      "time": "10:00 AM",
+      "duration": "60 min",
+      "location": "Conference Room A",
+      "description": "Deep dive session on scaling business operations and identifying growth opportunities in emerging markets. We'll cover strategic planning methodologies and implementation frameworks.",
+      "mentor": {
+        "name": "Sarah Chen",
+        "title": "Senior Strategy Consultant",
+        "avatar": "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+        "company": "McKinsey & Co"
+      }
+    },
+    {
+      "id": "s2", 
+      "title": "Product Launch Strategy",
+      "type": "Product",
+      "date": "2025-01-28",
+      "time": "2:00 PM", 
+      "duration": "45 min",
+      "location": "Virtual",
+      "description": "Comprehensive product launch planning session covering market positioning, competitive analysis, and go-to-market strategy execution.",
+      "mentor": {
+        "name": "Michael Rodriguez",
+        "title": "Product Director",
+        "avatar": "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+        "company": "Google"
+      }
+    },
+    {
+      "id": "s3",
+      "title": "Financial Modeling Workshop",
+      "type": "Finance",
+      "date": "2025-01-30",
+      "time": "11:30 AM",
+      "duration": "90 min", 
+      "location": "Training Room B",
+      "description": "Hands-on workshop covering advanced financial modeling techniques, DCF analysis, and valuation methodologies for startups and established businesses.",
+      "mentor": {
+        "name": "Jennifer Walsh",
+        "title": "Investment Director",
+        "avatar": "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
+        "company": "Goldman Sachs"
+      }
+    }
+  ],
+  "meetings": [
+    {
+      "id": "m1",
+      "title": "Q1 Business Review",
+      "type": "Review",
+      "date": "2025-01-26",
+      "time": "9:00 AM",
+      "duration": "120 min",
+      "location": "Board Room",
+      "description": "Quarterly business performance review covering KPIs, financial metrics, and strategic initiatives progress assessment.",
+      "attendees": [
+        {
+          "name": "David Kim",
+          "title": "CEO",
+          "avatar": "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
+        },
+        {
+          "name": "Lisa Park",
+          "title": "CFO", 
+          "avatar": "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "title": "Innovation Workshop",
+      "type": "Workshop",
+      "date": "2025-01-29",
+      "time": "1:00 PM",
+      "duration": "180 min",
+      "location": "Innovation Lab",
+      "description": "Collaborative innovation session focused on emerging technologies and their potential applications in business transformation.",
+      "attendees": [
+        {
+          "name": "Alex Thompson",
+          "title": "Head of Innovation",
+          "avatar": "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
+        },
+        {
+          "name": "Maria Garcia",
+          "title": "Senior Developer",
+          "avatar": "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "title": "Partnership Strategy",
+      "type": "Strategy",
+      "date": "2025-02-01",
+      "time": "3:30 PM",
+      "duration": "75 min",
+      "location": "Virtual",
+      "description": "Strategic planning meeting to explore potential partnerships and collaboration opportunities in the MENA region.",
+      "attendees": [
+        {
+          "name": "Ahmed Al-Rashid",
+          "title": "Regional Director",
+          "avatar": "https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "name": "Emma Watson",
+      "title": "Marketing Director",
+      "company": "HubSpot",
+      "avatar": "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
+      "bio": "Experienced marketing professional with 8+ years in digital marketing, growth hacking, and brand strategy. Passionate about helping startups scale their marketing efforts.",
+      "expertise": ["Digital Marketing", "Growth Strategy", "Brand Development"],
+      "linkedSessions": ["s1", "s2"],
+      "notes": "Interested in exploring partnership opportunities for Q2 marketing initiatives.",
+      "location": "Dubai, UAE",
+      "connections": 342
+    },
+    {
+      "id": "c2", 
+      "name": "Robert Johnson",
+      "title": "Tech Entrepreneur",
+      "company": "Founder, TechStart",
+      "avatar": "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
+      "bio": "Serial entrepreneur with 3 successful exits. Currently focused on AI and machine learning applications in fintech. Active mentor and angel investor.",
+      "expertise": ["Entrepreneurship", "AI/ML", "Fintech", "Fundraising"],
+      "linkedSessions": ["s3"],
+      "notes": "Potential investor for Series A round. Follow up on due diligence materials.",
+      "location": "London, UK", 
+      "connections": 1250
+    },
+    {
+      "id": "c3",
+      "name": "Fatima Al-Zahra",
+      "title": "Investment Manager",
+      "company": "MENA Ventures",
+      "avatar": "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
+      "bio": "Leading investment professional specializing in MENA region startups. Expertise in venture capital, private equity, and strategic investments.",
+      "expertise": ["Venture Capital", "Private Equity", "MENA Markets", "Due Diligence"],
+      "linkedSessions": ["s1", "s3"],
+      "notes": "Scheduled follow-up meeting for investment discussion next week.",
+      "location": "Abu Dhabi, UAE",
+      "connections": 890
+    },
+    {
+      "id": "c4",
+      "name": "Thomas Anderson",
+      "title": "Operations Director",
+      "company": "Scale Dynamics",
+      "avatar": "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
+      "bio": "Operations expert with extensive experience in scaling businesses across multiple industries. Specialized in process optimization and organizational development.",
+      "expertise": ["Operations", "Process Optimization", "Scaling", "Team Building"],
+      "linkedSessions": ["s2"],
+      "notes": "Provided valuable insights on operational efficiency improvements.",
+      "location": "Singapore",
+      "connections": 567
+    }
+  ],
+  "mentors": [
+    {
+      "id": "mentor1",
+      "name": "Dr. Amira Hassan",
+      "title": "Strategic Advisor",
+      "company": "Former McKinsey Partner",
+      "avatar": "https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
+      "category": "Suggested Mentors",
+      "expertise": ["Strategy", "Leadership", "Transformation"],
+      "rating": 4.9,
+      "sessions": 156,
+      "bio": "Former McKinsey Partner with 15+ years of experience in strategic consulting. Specialized in digital transformation and organizational change management.",
+      "price": "$200/hr"
+    },
+    {
+      "id": "mentor2",
+      "name": "James Mitchell",
+      "title": "Sales Director",
+      "company": "Salesforce",
+      "avatar": "https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
+      "category": "Sales Mentors",
+      "expertise": ["Sales Strategy", "CRM", "Team Leadership"],
+      "rating": 4.8,
+      "sessions": 89,
+      "bio": "Senior sales leader with proven track record of building and scaling high-performance sales teams. Expert in B2B sales and customer success strategies.",
+      "price": "$150/hr"
+    },
+    {
+      "id": "mentor3",
+      "name": "Priya Sharma",
+      "title": "Product Leader",
+      "company": "Meta",
+      "avatar": "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
+      "category": "Suggested Mentors", 
+      "expertise": ["Product Management", "UX Strategy", "Growth"],
+      "rating": 4.9,
+      "sessions": 203,
+      "bio": "Product leader with extensive experience in building consumer and enterprise products. Passionate about user-centered design and growth strategies.",
+      "price": "$180/hr"
+    },
+    {
+      "id": "mentor4",
+      "name": "Carlos Rodriguez",
+      "title": "Sales VP",
+      "company": "HubSpot",
+      "avatar": "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
+      "category": "Sales Mentors",
+      "expertise": ["Sales Operations", "Revenue Growth", "Team Scaling"],
+      "rating": 4.7,
+      "sessions": 134,
+      "bio": "VP of Sales with experience scaling revenue from $1M to $100M+. Expert in sales operations, funnel optimization, and international expansion.",
+      "price": "$160/hr"
+    },
+    {
+      "id": "mentor5",
+      "name": "Yuki Tanaka",
+      "title": "Finance Director",
+      "company": "Goldman Sachs",
+      "avatar": "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
+      "category": "Finance Mentors",
+      "expertise": ["Financial Modeling", "Valuation", "Investment Banking"],
+      "rating": 4.8,
+      "sessions": 78,
+      "bio": "Senior finance professional with expertise in corporate finance, M&A, and capital markets. Helps startups with fundraising and financial strategy.",
+      "price": "$220/hr"
+    },
+    {
+      "id": "mentor6",
+      "name": "Liam O'Connor",
+      "title": "Tech Entrepreneur",
+      "company": "Founder & CEO",
+      "avatar": "https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop",
+      "category": "Entrepreneurship",
+      "expertise": ["Startup Strategy", "Fundraising", "Product Development"],
+      "rating": 4.9,
+      "sessions": 167,
+      "bio": "Serial entrepreneur with 2 successful exits. Currently building his third company. Passionate about helping early-stage founders navigate growth challenges.",
+      "price": "$190/hr"
+    }
+  ],
+  "reports": [
+    {
+      "id": "r1",
+      "title": "Q4 2024 Business Performance Report",
+      "description": "Comprehensive analysis of Q4 performance metrics, KPIs, and strategic initiative outcomes.",
+      "date": "2025-01-15",
+      "type": "Performance",
+      "downloadUrl": "/reports/q4-2024-performance.pdf"
+    },
+    {
+      "id": "r2",
+      "title": "Market Analysis: MENA Startup Ecosystem",
+      "description": "In-depth market research and analysis of startup trends, funding patterns, and growth opportunities in the MENA region.",
+      "date": "2025-01-10",
+      "type": "Market Research",
+      "downloadUrl": "/reports/mena-startup-ecosystem.pdf"
+    }
+  ],
+  "users": [
+    {
+      "id": "u1",
+      "email": "abid@tbdc.com",
+      "role": "Admin",
+      "company_UID": "TBDC001",
+      "name": "Abid Rahman",
+      "joinDate": "2023-01-15",
+      "status": "Active"
+    },
+    {
+      "id": "u2", 
+      "email": "sarah.jones@techstartup.com",
+      "role": "User",
+      "company_UID": "TS002",
+      "name": "Sarah Jones",
+      "joinDate": "2024-06-20",
+      "status": "Active"
+    }
+  ],
+  "favorites": ["c1", "c3"],
+  "dashboardData": {
+    "programFlow": {
+      "totalSessions": 156,
+      "completedSessions": 89,
+      "upcomingSessions": 24,
+      "cancelledSessions": 8
+    },
+    "kpis": {
+      "totalRevenue": "$340,280",
+      "activeUsers": 1234,
+      "completionRate": "87%",
+      "satisfaction": 4.6
+    }
+  }
+}
