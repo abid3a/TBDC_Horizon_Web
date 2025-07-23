@@ -9,6 +9,7 @@ import Surge from './components/Pages/Surge';
 import Reports from './components/Pages/Reports';
 import Admin from './components/Pages/Admin';
 import Login from './components/Pages/Login';
+import Mentors from './components/Pages/Mentors';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => localStorage.getItem('isAuthenticated') === 'true');
@@ -40,6 +41,7 @@ function App() {
     '/surge': 'surge',
     '/reports': 'reports',
     '/admin': 'admin',
+    '/mentors': 'mentors',
   };
   const currentPage = pathToPage[location.pathname] || 'overview';
 
@@ -52,6 +54,7 @@ function App() {
       surge: '/surge',
       reports: '/reports',
       admin: '/admin',
+      mentors: '/mentors',
     };
     navigate(pageToPath[page] || '/');
   };
@@ -76,6 +79,7 @@ function App() {
             {isAuthenticated && <Route path="/surge" element={<Surge />} />}
             {isAuthenticated && <Route path="/reports" element={<Reports />} />}
             {isAuthenticated && <Route path="/admin" element={<Admin />} />}
+            {isAuthenticated && <Route path="/mentors" element={<Mentors />} />}
             {/* Redirect all other routes to login if not authenticated */}
             {!isAuthenticated && <Route path="*" element={<Login setIsAuthenticated={setIsAuthenticated} />} />}
           </Routes>

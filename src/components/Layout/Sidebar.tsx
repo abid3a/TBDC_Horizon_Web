@@ -51,7 +51,6 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, setIsAuthent
     { id: 'admin', label: 'Admin', icon: Settings },
   ];
   const accountItems = [
-    { id: 'chat', label: 'Chat', icon: MessageCircle },
     { id: 'settings', label: 'Settings', icon: Settings },
     { id: 'logout', label: 'Log out', icon: LogOut },
   ];
@@ -80,7 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, setIsAuthent
   }, [darkMode]);
 
   return (
-    <div className={`h-screen flex flex-col transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'} bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800`}>
+    <div className={`h-screen flex flex-col transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'} bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 min-h-0`}>
       {/* Logo and collapse button */}
       <div className={`flex items-center ${collapsed ? 'flex-col space-y-2 justify-center py-4' : 'justify-between p-4'} transition-all`}>
         <div className={`flex items-center ${collapsed ? 'justify-center' : 'space-x-3'}`}>
@@ -105,83 +104,85 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, setIsAuthent
         </button>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-2 pb-2">
-        {/* Overview section */}
-        {!collapsed && <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 px-2 pt-2 pb-1">OVERVIEW</div>}
-        <div className="space-y-1">
-          {overviewItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = currentPage === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={e => { onNavigate(item.id); }}
-                className={`w-full flex items-center ${collapsed ? 'justify-center' : 'space-x-3'} px-3 py-2 rounded-lg text-left transition-all duration-200 ${
-                  isActive
-                    ? 'bg-amber-50 dark:bg-amber-900 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-700'
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
-                } focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300`}
-                title={collapsed ? item.label : undefined}
-              >
-                <Icon className={`w-5 h-5 ${isActive ? 'text-amber-600 dark:text-amber-300' : 'text-gray-400 dark:text-gray-500'}`} />
-                {!collapsed && <span className="font-medium">{item.label}</span>}
-              </button>
-            );
-          })}
-        </div>
-        {/* Account section */}
-        <div className="mt-6">
-          {!collapsed && <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 px-2 pt-2 pb-1">ACCOUNT</div>}
+      {/* Navigation (scrollable) */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <nav className="px-2 pb-2">
+          {/* Overview section */}
+          {!collapsed && <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 px-2 pt-2 pb-1">OVERVIEW</div>}
           <div className="space-y-1">
-            {accountItems.map((item) => {
+            {overviewItems.map((item) => {
               const Icon = item.icon;
-              if (item.id === 'logout') {
-                return (
-                  <>
-                    <button
-                      key={item.id}
-                      className={`w-full flex items-center ${collapsed ? 'justify-center' : 'space-x-3'} px-3 py-2 rounded-lg text-left transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300`}
-                      title={collapsed ? item.label : undefined}
-                      onClick={() => {
-                        setShowLogoutModal(true);
-                      }}
-                    >
-                      <Icon className="w-5 h-5" />
-                      {!collapsed && <span className="font-medium">{item.label}</span>}
-                    </button>
-                    <ConfirmModal
-                      isOpen={showLogoutModal}
-                      title="Confirm Logout"
-                      message="Are you sure you want to log out?"
-                      onCancel={() => setShowLogoutModal(false)}
-                      onConfirm={() => {
-                        setShowLogoutModal(false);
-                        localStorage.setItem('isAuthenticated', 'false');
-                        if (typeof setIsAuthenticated === 'function') setIsAuthenticated(false);
-                        navigate('/login');
-                      }}
-                    />
-                  </>
-                );
-              }
+              const isActive = currentPage === item.id;
               return (
                 <button
                   key={item.id}
-                  className={`w-full flex items-center ${collapsed ? 'justify-center' : 'space-x-3'} px-3 py-2 rounded-lg text-left transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300`}
+                  onClick={e => { onNavigate(item.id); }}
+                  className={`w-full flex items-center ${collapsed ? 'justify-center' : 'space-x-3'} px-3 py-2 rounded-lg text-left transition-all duration-200 ${
+                    isActive
+                      ? 'bg-amber-50 dark:bg-amber-900 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-700'
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'
+                  } focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300`}
                   title={collapsed ? item.label : undefined}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className={`w-5 h-5 ${isActive ? 'text-amber-600 dark:text-amber-300' : 'text-gray-400 dark:text-gray-500'}`} />
                   {!collapsed && <span className="font-medium">{item.label}</span>}
                 </button>
               );
             })}
           </div>
-        </div>
-      </nav>
+          {/* Account section */}
+          <div className="mt-6">
+            {!collapsed && <div className="text-xs font-semibold text-gray-400 dark:text-gray-500 px-2 pt-2 pb-1">ACCOUNT</div>}
+            <div className="space-y-1">
+              {accountItems.map((item) => {
+                const Icon = item.icon;
+                if (item.id === 'logout') {
+                  return (
+                    <>
+                      <button
+                        key={item.id}
+                        className={`w-full flex items-center ${collapsed ? 'justify-center' : 'space-x-3'} px-3 py-2 rounded-lg text-left transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300`}
+                        title={collapsed ? item.label : undefined}
+                        onClick={() => {
+                          setShowLogoutModal(true);
+                        }}
+                      >
+                        <Icon className="w-5 h-5" />
+                        {!collapsed && <span className="font-medium">{item.label}</span>}
+                      </button>
+                      <ConfirmModal
+                        isOpen={showLogoutModal}
+                        title="Confirm Logout"
+                        message="Are you sure you want to log out?"
+                        onCancel={() => setShowLogoutModal(false)}
+                        onConfirm={() => {
+                          setShowLogoutModal(false);
+                          localStorage.setItem('isAuthenticated', 'false');
+                          if (typeof setIsAuthenticated === 'function') setIsAuthenticated(false);
+                          navigate('/login');
+                        }}
+                      />
+                    </>
+                  );
+                }
+                return (
+                  <button
+                    key={item.id}
+                    className={`w-full flex items-center ${collapsed ? 'justify-center' : 'space-x-3'} px-3 py-2 rounded-lg text-left transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300`}
+                    title={collapsed ? item.label : undefined}
+                  >
+                    <Icon className="w-5 h-5" />
+                    {!collapsed && <span className="font-medium">{item.label}</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </nav>
+      </div>
 
       {/* Bottom: dark mode toggle and profile */}
-      <div className="p-3 border-t border-gray-100 dark:border-gray-800 flex flex-col space-y-2">
+      <div className="p-3 border-t border-gray-100 dark:border-gray-800 flex flex-col space-y-2 bg-white dark:bg-gray-900 sticky bottom-0 z-10">
         {/* Dark mode toggle */}
         <button
           onClick={handleToggleDark}

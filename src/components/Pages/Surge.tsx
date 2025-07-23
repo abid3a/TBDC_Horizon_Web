@@ -121,7 +121,7 @@ const Surge: React.FC = () => {
           <div key={category} className="mb-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-gray-900">{category}</h2>
-              <button className="flex items-center space-x-1 text-amber-600 hover:text-amber-700 font-medium">
+              <button className="flex items-center space-x-1 text-amber-600 hover:text-amber-700 font-medium" onClick={() => window.open('/mentors', '_blank')}>
                 <span>View all</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
