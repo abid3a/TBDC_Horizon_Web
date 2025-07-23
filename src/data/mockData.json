@@ -47,6 +47,54 @@
         "avatar": "https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop",
         "company": "Goldman Sachs"
       }
+    },
+    {
+      "id": "s_past",
+      "title": "Past Strategy Session",
+      "type": "Strategy",
+      "date": "2023-01-01",
+      "time": "09:00 AM",
+      "duration": "60 min",
+      "location": "Room 101",
+      "description": "A past session for strategy review.",
+      "mentor": {
+        "name": "Past Mentor",
+        "title": "Strategy Coach",
+        "avatar": "https://randomuser.me/api/portraits/men/31.jpg",
+        "company": "OldCo"
+      }
+    },
+    {
+      "id": "s_today",
+      "title": "Today's Product Sync",
+      "type": "Product",
+      "date": "2025-07-10",
+      "time": "11:00 AM",
+      "duration": "45 min",
+      "location": "Virtual",
+      "description": "A session happening today.",
+      "mentor": {
+        "name": "Today Mentor",
+        "title": "Product Lead",
+        "avatar": "https://randomuser.me/api/portraits/women/32.jpg",
+        "company": "NowCo"
+      }
+    },
+    {
+      "id": "s_upcoming",
+      "title": "Upcoming Finance Workshop",
+      "type": "Finance",
+      "date": "2025-12-31",
+      "time": "03:00 PM",
+      "duration": "90 min",
+      "location": "Room 202",
+      "description": "A future session for finance skills.",
+      "mentor": {
+        "name": "Upcoming Mentor",
+        "title": "Finance Expert",
+        "avatar": "https://randomuser.me/api/portraits/men/33.jpg",
+        "company": "FutureCo"
+      }
     }
   ],
   "meetings": [
@@ -108,6 +156,57 @@
           "name": "Ahmed Al-Rashid",
           "title": "Regional Director",
           "avatar": "https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
+        }
+      ]
+    },
+    {
+      "id": "m_past",
+      "title": "Past Review Meeting",
+      "type": "Review",
+      "date": "2023-01-01",
+      "time": "10:00 AM",
+      "duration": "30 min",
+      "location": "Board Room",
+      "description": "A past review meeting.",
+      "attendees": [
+        {
+          "name": "Past Attendee",
+          "title": "Manager",
+          "avatar": "https://randomuser.me/api/portraits/men/34.jpg"
+        }
+      ]
+    },
+    {
+      "id": "m_today",
+      "title": "Today's Planning Meeting",
+      "type": "Planning",
+      "date": "2025-07-10",
+      "time": "01:00 PM",
+      "duration": "60 min",
+      "location": "Zoom",
+      "description": "A meeting happening today.",
+      "attendees": [
+        {
+          "name": "Today Attendee",
+          "title": "Planner",
+          "avatar": "https://randomuser.me/api/portraits/women/35.jpg"
+        }
+      ]
+    },
+    {
+      "id": "m_upcoming",
+      "title": "Upcoming Workshop Meeting",
+      "type": "Workshop",
+      "date": "2025-12-31",
+      "time": "04:00 PM",
+      "duration": "120 min",
+      "location": "Main Hall",
+      "description": "A future workshop meeting.",
+      "attendees": [
+        {
+          "name": "Upcoming Attendee",
+          "title": "Facilitator",
+          "avatar": "https://randomuser.me/api/portraits/men/36.jpg"
         }
       ]
     }
@@ -244,6 +343,201 @@
       "sessions": 167,
       "bio": "Serial entrepreneur with 2 successful exits. Currently building his third company. Passionate about helping early-stage founders navigate growth challenges.",
       "price": "$190/hr"
+    },
+    {
+      "id": "mentor7",
+      "name": "Linda Park",
+      "title": "Marketing Strategist",
+      "company": "Ogilvy",
+      "avatar": "https://randomuser.me/api/portraits/women/65.jpg",
+      "category": "Marketing Mentors",
+      "expertise": ["Brand Strategy", "Digital Marketing", "Content"],
+      "rating": 4.7,
+      "sessions": 102,
+      "bio": "Award-winning marketing strategist with 15+ years in global brand campaigns. Expert in digital and content marketing.",
+      "price": "$140/hr"
+    },
+    {
+      "id": "mentor8",
+      "name": "Raj Patel",
+      "title": "AI Product Manager",
+      "company": "Google",
+      "avatar": "https://randomuser.me/api/portraits/men/43.jpg",
+      "category": "Tech Mentors",
+      "expertise": ["AI", "Product Management", "ML Ops"],
+      "rating": 4.8,
+      "sessions": 88,
+      "bio": "Product leader in AI/ML with a passion for building scalable tech products. Speaker at major AI conferences.",
+      "price": "$210/hr"
+    },
+    {
+      "id": "mentor9",
+      "name": "Sophie Dubois",
+      "title": "UX Research Lead",
+      "company": "Airbnb",
+      "avatar": "https://randomuser.me/api/portraits/women/68.jpg",
+      "category": "Design Mentors",
+      "expertise": ["UX Research", "User Testing", "Design Thinking"],
+      "rating": 4.9,
+      "sessions": 120,
+      "bio": "UX research lead with a focus on user-centered design and innovation. Ex-IDEO.",
+      "price": "$180/hr"
+    },
+    {
+      "id": "mentor10",
+      "name": "Carlos Mendes",
+      "title": "Startup Advisor",
+      "company": "500 Startups",
+      "avatar": "https://randomuser.me/api/portraits/men/55.jpg",
+      "category": "Entrepreneurship",
+      "expertise": ["Fundraising", "Pitching", "Growth Hacking"],
+      "rating": 4.6,
+      "sessions": 140,
+      "bio": "Serial entrepreneur and investor. Helps startups scale and raise capital.",
+      "price": "$250/hr"
+    },
+    {
+      "id": "mentor11",
+      "name": "Emily Chen",
+      "title": "Data Science Director",
+      "company": "Shopify",
+      "avatar": "https://randomuser.me/api/portraits/women/52.jpg",
+      "category": "Tech Mentors",
+      "expertise": ["Data Science", "Analytics", "Python"],
+      "rating": 4.8,
+      "sessions": 97,
+      "bio": "Director of Data Science with a background in e-commerce analytics and predictive modeling.",
+      "price": "$200/hr"
+    },
+    {
+      "id": "mentor12",
+      "name": "Mohamed El-Sayed",
+      "title": "Operations Consultant",
+      "company": "Deloitte",
+      "avatar": "https://randomuser.me/api/portraits/men/60.jpg",
+      "category": "Operations Mentors",
+      "expertise": ["Process Optimization", "Supply Chain", "Lean"],
+      "rating": 4.7,
+      "sessions": 110,
+      "bio": "Consultant specializing in operations and supply chain for Fortune 500 companies.",
+      "price": "$170/hr"
+    },
+    {
+      "id": "mentor13",
+      "name": "Julia Rossi",
+      "title": "Legal Advisor",
+      "company": "Rossi & Partners",
+      "avatar": "https://randomuser.me/api/portraits/women/44.jpg",
+      "category": "Legal Mentors",
+      "expertise": ["Startup Law", "IP", "Contracts"],
+      "rating": 4.9,
+      "sessions": 75,
+      "bio": "Legal advisor for startups and VCs. Expert in IP and contract law.",
+      "price": "$300/hr"
+    },
+    {
+      "id": "mentor14",
+      "name": "David Kim",
+      "title": "Finance Coach",
+      "company": "Morgan Stanley",
+      "avatar": "https://randomuser.me/api/portraits/men/70.jpg",
+      "category": "Finance Mentors",
+      "expertise": ["Financial Planning", "Investing", "Wealth Management"],
+      "rating": 4.8,
+      "sessions": 130,
+      "bio": "Finance coach with 20+ years in wealth management and investment planning.",
+      "price": "$220/hr"
+    },
+    {
+      "id": "mentor15",
+      "name": "Linda Park (Suggested)",
+      "title": "Marketing Strategist",
+      "company": "Ogilvy",
+      "avatar": "https://randomuser.me/api/portraits/women/65.jpg",
+      "category": "Suggested Mentors",
+      "expertise": ["Brand Strategy", "Digital Marketing", "Content"],
+      "rating": 4.7,
+      "sessions": 102,
+      "bio": "Award-winning marketing strategist with 15+ years in global brand campaigns. Expert in digital and content marketing.",
+      "price": "$140/hr"
+    },
+    {
+      "id": "mentor16",
+      "name": "Raj Patel (Suggested)",
+      "title": "AI Product Manager",
+      "company": "Google",
+      "avatar": "https://randomuser.me/api/portraits/men/43.jpg",
+      "category": "Suggested Mentors",
+      "expertise": ["AI", "Product Management", "ML Ops"],
+      "rating": 4.8,
+      "sessions": 88,
+      "bio": "Product leader in AI/ML with a passion for building scalable tech products. Speaker at major AI conferences.",
+      "price": "$210/hr"
+    },
+    {
+      "id": "mentor17",
+      "name": "Sophie Dubois (Suggested)",
+      "title": "UX Research Lead",
+      "company": "Airbnb",
+      "avatar": "https://randomuser.me/api/portraits/women/68.jpg",
+      "category": "Suggested Mentors",
+      "expertise": ["UX Research", "User Testing", "Design Thinking"],
+      "rating": 4.9,
+      "sessions": 120,
+      "bio": "UX research lead with a focus on user-centered design and innovation. Ex-IDEO.",
+      "price": "$180/hr"
+    },
+    {
+      "id": "mentor18",
+      "name": "Carlos Mendes (Suggested)",
+      "title": "Startup Advisor",
+      "company": "500 Startups",
+      "avatar": "https://randomuser.me/api/portraits/men/55.jpg",
+      "category": "Suggested Mentors",
+      "expertise": ["Fundraising", "Pitching", "Growth Hacking"],
+      "rating": 4.6,
+      "sessions": 140,
+      "bio": "Serial entrepreneur and investor. Helps startups scale and raise capital.",
+      "price": "$250/hr"
+    },
+    {
+      "id": "mentor19",
+      "name": "Emily Chen (Suggested)",
+      "title": "Data Science Director",
+      "company": "Shopify",
+      "avatar": "https://randomuser.me/api/portraits/women/52.jpg",
+      "category": "Suggested Mentors",
+      "expertise": ["Data Science", "Analytics", "Python"],
+      "rating": 4.8,
+      "sessions": 97,
+      "bio": "Director of Data Science with a background in e-commerce analytics and predictive modeling.",
+      "price": "$200/hr"
+    },
+    {
+      "id": "mentor20",
+      "name": "Mohamed El-Sayed (Suggested)",
+      "title": "Operations Consultant",
+      "company": "Deloitte",
+      "avatar": "https://randomuser.me/api/portraits/men/60.jpg",
+      "category": "Suggested Mentors",
+      "expertise": ["Process Optimization", "Supply Chain", "Lean"],
+      "rating": 4.7,
+      "sessions": 110,
+      "bio": "Consultant specializing in operations and supply chain for Fortune 500 companies.",
+      "price": "$170/hr"
+    },
+    {
+      "id": "mentor21",
+      "name": "Julia Rossi (Suggested)",
+      "title": "Legal Advisor",
+      "company": "Rossi & Partners",
+      "avatar": "https://randomuser.me/api/portraits/women/44.jpg",
+      "category": "Suggested Mentors",
+      "expertise": ["Startup Law", "IP", "Contracts"],
+      "rating": 4.9,
+      "sessions": 75,
+      "bio": "Legal advisor for startups and VCs. Expert in IP and contract law.",
+      "price": "$300/hr"
     }
   ],
   "reports": [
@@ -272,7 +566,8 @@
       "company_UID": "TBDC001",
       "name": "Abid Rahman",
       "joinDate": "2023-01-15",
-      "status": "Active"
+      "status": "Active",
+      "credits": 830
     },
     {
       "id": "u2", 
@@ -281,7 +576,8 @@
       "company_UID": "TS002",
       "name": "Sarah Jones",
       "joinDate": "2024-06-20",
-      "status": "Active"
+      "status": "Active",
+      "credits": 120
     }
   ],
   "favorites": ["c1", "c3"],

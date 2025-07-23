@@ -1,32 +1,49 @@
 import React from 'react';
-import { Star } from 'lucide-react';
+import { Star, CheckCircle } from 'lucide-react';
 
 interface MentorCardProps {
   mentor: any;
   onClick: (mentor: any) => void;
 }
 
+const CARD_WIDTH = 287;
+const CARD_HEIGHT = 373;
+
 const MentorCard: React.FC<MentorCardProps> = ({ mentor, onClick }) => {
   return (
     <div
-      className="flex-shrink-0 w-48 bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow cursor-pointer"
+      className="flex flex-col items-center cursor-pointer group transition-transform duration-200 will-change-transform"
+      style={{ width: CARD_WIDTH }}
       onClick={() => onClick(mentor)}
     >
-      <div className="text-center">
+      {/* Mentor Image Card (pop-out on hover) */}
+      <div
+        className="rounded-2xl shadow-lg overflow-hidden bg-gray-100 transition-all duration-200 group-hover:shadow-2xl group-hover:scale-102 group-hover:z-20 group-hover:relative"
+        style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+      >
         <img
           src={mentor.avatar}
           alt={mentor.name}
-          className="w-16 h-16 rounded-full mx-auto mb-3"
+          className="object-cover w-full h-full bg-gray-200"
+          style={{ width: '100%', height: '100%', display: 'block' }}
         />
-        <h3 className="font-semibold text-gray-900 mb-1">{mentor.name}</h3>
-        <p className="text-sm text-gray-600 mb-2">{mentor.title}</p>
-        <p className="text-xs text-gray-500 mb-3">{mentor.company}</p>
-        <div className="flex items-center justify-center space-x-1 mb-2">
-          <Star className="w-4 h-4 text-amber-400 fill-current" />
-          <span className="text-sm font-medium">{mentor.rating}</span>
-          <span className="text-xs text-gray-500">({mentor.sessions})</span>
+      </div>
+      {/* Mentor Details Below Image */}
+      <div className="w-full px-2 pt-3 pb-2" style={{ maxWidth: CARD_WIDTH }}>
+        <div className="flex items-center justify-between mb-0.5">
+          <span className="font-semibold text-base text-gray-900 flex items-center">
+            {mentor.name}
+            {/* Remove any yellow circle or emoji here */}
+          </span>
+          <span className="flex items-center text-xs text-gray-700 font-medium">
+            <Star className="w-4 h-4 text-amber-400 mr-0.5" fill="#fbbf24" />
+            {mentor.rating}
+          </span>
         </div>
-        <div className="text-sm font-medium text-gray-900">{mentor.price}</div>
+        <div className="text-xs text-gray-500 mb-1">{mentor.price} · Session</div>
+        <div className="text-sm text-gray-700 leading-snug line-clamp-3">
+          {mentor.bio}
+        </div>
       </div>
     </div>
   );

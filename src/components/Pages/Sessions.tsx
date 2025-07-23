@@ -1,26 +1,46 @@
 import React, { useState } from 'react';
+import { Calendar, Clock, MapPin } from 'lucide-react';
 import SessionCard from '../Common/SessionCard';
 import FilterBar from '../Common/FilterBar';
 import SidePeekPanel from '../Common/SidePeekPanel';
 import mockData from '../../data/mockData.json';
 
+function getSessionCategory(session: any): 'Past' | 'Today' | 'Upcoming' {
+  const today = new Date();
+  const sessionDate = new Date(session.date);
+  const isToday = sessionDate.toDateString() === today.toDateString();
+  if (sessionDate < today && !isToday) return 'Past';
+  if (isToday) return 'Today';
+  return 'Upcoming';
+}
+
 const Sessions: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [selectedSession, setSelectedSession] = useState<any>(null);
+  const [openSections, setOpenSections] = useState<Record<'Past' | 'Today' | 'Upcoming', boolean>>({ Past: false, Today: true, Upcoming: true });
 
   const { sessions } = mockData;
   const filters = ['Strategy', 'Product', 'Finance', 'Marketing'];
 
-  const filteredSessions = sessions.filter(session => {
+  const filteredSessions = sessions.filter((session: any) => {
     const matchesSearch = session.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          session.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = selectedFilters.length === 0 || selectedFilters.includes(session.type);
     return matchesSearch && matchesFilter;
   });
 
+  const categorized: Record<'Past' | 'Today' | 'Upcoming', any[]> = { Past: [], Today: [], Upcoming: [] };
+  filteredSessions.forEach((session: any) => {
+    categorized[getSessionCategory(session)].push(session);
+  });
+
   const handleSessionClick = (session: any) => {
     setSelectedSession(session);
+  };
+
+  const toggleSection = (section: 'Past' | 'Today' | 'Upcoming') => {
+    setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
   return (
@@ -41,11 +61,38 @@ const Sessions: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredSessions.map((session) => (
-            <SessionCard key={session.id} session={session} onClick={handleSessionClick} />
-          ))}
-        </div>
+        {(['Today', 'Upcoming', 'Past'] as const).map(section => (
+          <div key={section} className="mb-6">
+            <button
+              className="flex items-center text-lg font-semibold text-gray-800 py-2 px-3 bg-transparent focus:outline-none"
+              onClick={() => toggleSection(section)}
+            >
+              <span className="flex flex-row items-center">
+                <svg
+                  className={`w-5 h-5 mr-2 transform transition-transform duration-200 ${openSections[section] ? 'rotate-0' : '-rotate-90'}`}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+                {section} ({categorized[section].length})
+              </span>
+            </button>
+            {openSections[section] && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
+                {categorized[section].length === 0 ? (
+                  <div className="col-span-full text-gray-400 text-center py-8">No {section.toLowerCase()} sessions</div>
+                ) : (
+                  categorized[section].map((session: any) => (
+                    <SessionCard key={session.id} session={session} onClick={handleSessionClick} />
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
       {/* Side Peek Panel */}

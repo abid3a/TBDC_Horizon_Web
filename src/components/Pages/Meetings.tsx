@@ -1,26 +1,46 @@
 import React, { useState } from 'react';
+import { Calendar, Clock, MapPin } from 'lucide-react';
 import MeetingCard from '../Common/MeetingCard';
 import FilterBar from '../Common/FilterBar';
 import SidePeekPanel from '../Common/SidePeekPanel';
 import mockData from '../../data/mockData.json';
 
+function getMeetingCategory(meeting: any): 'Past' | 'Today' | 'Upcoming' {
+  const today = new Date();
+  const meetingDate = new Date(meeting.date);
+  const isToday = meetingDate.toDateString() === today.toDateString();
+  if (meetingDate < today && !isToday) return 'Past';
+  if (isToday) return 'Today';
+  return 'Upcoming';
+}
+
 const Meetings: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [selectedMeeting, setSelectedMeeting] = useState<any>(null);
+  const [openSections, setOpenSections] = useState<Record<'Past' | 'Today' | 'Upcoming', boolean>>({ Past: false, Today: true, Upcoming: true });
 
   const { meetings } = mockData;
   const filters = ['Review', 'Workshop', 'Strategy', 'Planning'];
 
-  const filteredMeetings = meetings.filter(meeting => {
+  const filteredMeetings = meetings.filter((meeting: any) => {
     const matchesSearch = meeting.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          meeting.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = selectedFilters.length === 0 || selectedFilters.includes(meeting.type);
     return matchesSearch && matchesFilter;
   });
 
+  const categorized: Record<'Past' | 'Today' | 'Upcoming', any[]> = { Past: [], Today: [], Upcoming: [] };
+  filteredMeetings.forEach((meeting: any) => {
+    categorized[getMeetingCategory(meeting)].push(meeting);
+  });
+
   const handleMeetingClick = (meeting: any) => {
     setSelectedMeeting(meeting);
+  };
+
+  const toggleSection = (section: 'Past' | 'Today' | 'Upcoming') => {
+    setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
   return (
@@ -41,11 +61,38 @@ const Meetings: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredMeetings.map((meeting) => (
-            <MeetingCard key={meeting.id} meeting={meeting} onClick={handleMeetingClick} />
-          ))}
-        </div>
+        {(['Today', 'Upcoming', 'Past'] as const).map(section => (
+          <div key={section} className="mb-6">
+            <button
+              className="flex items-center text-lg font-semibold text-gray-800 py-2 px-3 bg-transparent focus:outline-none"
+              onClick={() => toggleSection(section)}
+            >
+              <span className="flex flex-row items-center">
+                <svg
+                  className={`w-5 h-5 mr-2 transform transition-transform duration-200 ${openSections[section] ? 'rotate-0' : '-rotate-90'}`}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+                {section} ({categorized[section].length})
+              </span>
+            </button>
+            {openSections[section] && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
+                {categorized[section].length === 0 ? (
+                  <div className="col-span-full text-gray-400 text-center py-8">No {section.toLowerCase()} meetings</div>
+                ) : (
+                  categorized[section].map((meeting: any) => (
+                    <MeetingCard key={meeting.id} meeting={meeting} onClick={handleMeetingClick} />
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
       {/* Side Peek Panel */}
@@ -87,21 +134,25 @@ const Meetings: React.FC = () => {
 
             <div className="bg-gray-50 rounded-lg p-4">
               <h3 className="font-semibold text-gray-900 mb-3">
-                Attendees ({selectedMeeting.attendees.length})
+                Attendees ({Array.isArray(selectedMeeting.attendees) ? selectedMeeting.attendees.length : 0})
               </h3>
               <div className="space-y-3">
-                {selectedMeeting.attendees.map((attendee: any, index: number) => (
-                  <div key={index} className="flex items-center space-x-3">
-                    <img
-                      src={attendee.avatar}
-                      alt={attendee.name}
-                      className="w-10 h-10 rounded-full"
-                    />
-                    <div>
-                      <p className="font-medium text-gray-900">{attendee.name}</p>
-                      <p className="text-sm text-gray-600">{attendee.title}</p>
+                {Array.isArray(selectedMeeting.attendees) && selectedMeeting.attendees.map((attendee: any, index: number) => (
+                  attendee && (
+                    <div key={index} className="flex items-center space-x-3">
+                      {attendee.avatar && (
+                        <img
+                          src={attendee.avatar}
+                          alt={attendee.name || 'Attendee'}
+                          className="w-10 h-10 rounded-full"
+                        />
+                      )}
+                      <div>
+                        <p className="font-medium text-gray-900">{attendee.name || 'Unknown'}</p>
+                        <p className="text-sm text-gray-600">{attendee.title || ''}</p>
+                      </div>
                     </div>
-                  </div>
+                  )
                 ))}
               </div>
             </div>

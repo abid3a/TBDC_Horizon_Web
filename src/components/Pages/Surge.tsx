@@ -1,13 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Star, Calendar, ChevronRight, X } from 'lucide-react';
 import MentorCard from '../Common/MentorCard';
 import mockData from '../../data/mockData.json';
+import CreditWidget from '../Common/CreditWidget';
+import SidePeekPanel from '../Common/SidePeekPanel';
 
 const Surge: React.FC = () => {
   const [selectedMentor, setSelectedMentor] = useState<any>(null);
   const [showBanner, setShowBanner] = useState(true);
+  const [showCreditModal, setShowCreditModal] = useState(false);
 
-  const { mentors } = mockData;
+  const { mentors, users } = mockData;
+  const currentUser = users[0];
+
+  // About section expand/collapse state
+  const [aboutExpanded, setAboutExpanded] = useState(false);
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const [showExpand, setShowExpand] = useState(false);
+  useEffect(() => {
+    setAboutExpanded(false); // Reset when mentor changes
+  }, [selectedMentor]);
+  useEffect(() => {
+    if (aboutRef.current) {
+      setShowExpand(aboutRef.current.scrollHeight > aboutRef.current.clientHeight + 2);
+    }
+  }, [selectedMentor, aboutExpanded]);
 
   const mentorsByCategory = mentors.reduce((acc: any, mentor) => {
     if (!acc[mentor.category]) {
@@ -24,6 +41,27 @@ const Surge: React.FC = () => {
   const handleBookSession = () => {
     alert(`Booking session with ${selectedMentor.name}. This would open a booking form in a real application.`);
   };
+
+  const iconRef = useRef<HTMLButtonElement>(null);
+
+  // Close popover on outside click or Escape
+  useEffect(() => {
+    if (!showCreditModal) return;
+    function handleClick(e: MouseEvent) {
+      if (iconRef.current && !iconRef.current.contains(e.target as Node)) {
+        setShowCreditModal(false);
+      }
+    }
+    function handleEsc(e: KeyboardEvent) {
+      if (e.key === 'Escape') setShowCreditModal(false);
+    }
+    document.addEventListener('mousedown', handleClick);
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [showCreditModal]);
 
   return (
     <div className="min-h-full">
@@ -48,11 +86,36 @@ const Surge: React.FC = () => {
         </div>
       )}
 
-      <div className="p-6">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Surge</h1>
-          <p className="text-gray-600 mt-1">Discover and connect with expert mentors</p>
+      {/* Sticky Header with CreditWidget Icon */}
+      <div className="sticky top-0 z-40 bg-white shadow-md px-6 py-3 flex items-center justify-between" style={{ minHeight: '80px', position: 'relative' }}>
+        {/* Left: Title and Subtitle */}
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 leading-tight">Surge</h1>
+          <p className="text-gray-600 mt-0.5 text-sm">Discover and connect with expert mentors</p>
         </div>
+        {/* Right: Credit Icon and Popover */}
+        <div className="relative">
+          <CreditWidget
+            credits={currentUser.credits}
+            mode="icon"
+            onClick={() => setShowCreditModal((v) => !v)}
+            iconButtonRef={iconRef}
+          />
+          {showCreditModal && (
+            <div className="absolute right-0 mt-3 w-96 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 animate-fade-in" style={{ minWidth: 320 }}>
+              <CreditWidget
+                credits={currentUser.credits}
+                onRefill={() => alert('Refill credits coming soon!')}
+                description="Used to book mentor sessions. 1 credit = 1 hour."
+                mode="full"
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="p-6">
+        {/* Remove the old title/subtitle here */}
 
         {Object.entries(mentorsByCategory).map(([category, categoryMentors]: [string, any]) => (
           <div key={category} className="mb-8">
@@ -64,7 +127,8 @@ const Surge: React.FC = () => {
               </button>
             </div>
 
-            <div className="flex space-x-6 overflow-x-auto pb-4">
+            {/* Mentor Cards Horizontal Scroll */}
+            <div className="flex gap-6 overflow-x-auto scrollbar-hide w-full" style={{ WebkitOverflowScrolling: 'touch' }}>
               {categoryMentors.map((mentor: any) => (
                 <MentorCard key={mentor.id} mentor={mentor} onClick={handleMentorClick} />
               ))}
@@ -73,84 +137,100 @@ const Surge: React.FC = () => {
         ))}
       </div>
 
-      {/* Mentor Detail Modal */}
-      {selectedMentor && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-black bg-opacity-50"
-            onClick={() => setSelectedMentor(null)}
-          />
-          <div className="relative bg-white rounded-xl shadow-xl max-w-md w-full m-4 max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              {/* Header */}
-              <div className="text-center mb-6">
-                <img
-                  src={selectedMentor.avatar}
-                  alt={selectedMentor.name}
-                  className="w-24 h-24 rounded-full mx-auto mb-4"
-                />
-                <h2 className="text-2xl font-bold text-gray-900">{selectedMentor.name}</h2>
-                <p className="text-gray-600">{selectedMentor.title}</p>
-                <p className="text-gray-500">{selectedMentor.company}</p>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 mb-6">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-gray-900">{selectedMentor.rating}</div>
-                  <div className="text-xs text-gray-600">Rating</div>
+      {/* Mentor Detail SidePeekPanel - Redesigned */}
+      <SidePeekPanel isOpen={!!selectedMentor} onClose={() => setSelectedMentor(null)} title="Mentor Details">
+        {selectedMentor && (
+          <div className="flex flex-col md:flex-row gap-8 p-8">
+            {/* Left: Profile Info */}
+            <div className="flex-1 flex flex-col items-center md:items-start">
+              <div className="w-full max-w-xs flex flex-col items-center mx-auto md:mx-0">
+                <div className="w-full aspect-[3/4] rounded-2xl shadow-lg overflow-hidden bg-gray-100 mb-4">
+                  <img
+                    src={selectedMentor.avatar}
+                    alt={selectedMentor.name}
+                    className="object-cover w-full h-full bg-gray-200"
+                  />
                 </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-gray-900">{selectedMentor.sessions}</div>
-                  <div className="text-xs text-gray-600">Sessions</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-gray-900">{selectedMentor.price}</div>
-                  <div className="text-xs text-gray-600">Per Hour</div>
-                </div>
-              </div>
-
-              {/* Bio */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-gray-900 mb-3">About</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{selectedMentor.bio}</p>
-              </div>
-
-              {/* Expertise */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-gray-900 mb-3">Expertise</h3>
-                <div className="flex flex-wrap gap-2">
-                  {selectedMentor.expertise.map((skill: string, index: number) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-amber-100 text-amber-800 text-sm font-medium rounded-full"
-                    >
-                      {skill}
+                <div className="w-full flex flex-col items-start">
+                  <span className="bg-black text-white text-xs font-semibold px-3 py-1 rounded-lg mb-2">Top Expert</span>
+                  <div className="flex items-center space-x-2 mb-1">
+                    <h2 className="text-2xl font-bold text-gray-900">{selectedMentor.name}</h2>
+                  </div>
+                  <div className="text-gray-600 text-sm mb-1">{selectedMentor.title}</div>
+                  <div className="text-gray-500 text-sm mb-2">{selectedMentor.company}</div>
+                  <div className="flex items-center space-x-2 mb-4">
+                    <span className="flex items-center text-sm text-gray-700 font-medium">
+                      <Star className="w-4 h-4 text-amber-400 mr-1" fill="#fbbf24" />
+                      {selectedMentor.rating}
                     </span>
-                  ))}
+                    <span className="text-xs text-gray-400">({selectedMentor.sessions} sessions)</span>
+                  </div>
+                  <div className="mb-4 w-full">
+                    <h3 className="font-semibold text-gray-900 mb-1">About me</h3>
+                    <div
+                      ref={aboutRef}
+                      className={`text-gray-700 text-sm leading-snug transition-all duration-200 ${aboutExpanded ? '' : 'line-clamp-2'}`}
+                      style={{ maxWidth: '100%' }}
+                    >
+                      {selectedMentor.bio}
+                    </div>
+                    {showExpand && (
+                      <button
+                        className="flex items-center mt-1 text-amber-600 hover:text-amber-800 text-xs font-semibold focus:outline-none"
+                        onClick={() => setAboutExpanded((v) => !v)}
+                      >
+                        <span>{aboutExpanded ? 'View less' : 'View more'}</span>
+                        <svg
+                          className={`w-4 h-4 ml-1 transform transition-transform duration-200 ${aboutExpanded ? 'rotate-180' : ''}`}
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {selectedMentor.expertise.map((skill: string, index: number) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-medium rounded-full"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-
-              {/* Actions */}
-              <div className="space-y-3">
+            </div>
+            {/* Vertical Divider */}
+            <div className="hidden md:block w-px bg-gray-200 mx-8" />
+            {/* Right: Booking Actions */}
+            <div className="flex-1 flex flex-col gap-6">
+              <div className="bg-white border border-gray-200 rounded-2xl shadow p-6 flex flex-col gap-3">
+                <span className="bg-black text-white text-xs font-semibold px-3 py-1 rounded mb-2 w-max">Book a video call</span>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">1:1 Video Consultation</h3>
+                <p className="text-gray-700 text-sm mb-2">Book a 1:1 live video consultation & get personalized advice</p>
+                <div className="flex items-center space-x-2 mb-2">
+                  <span className="font-semibold text-gray-900">Starting at {selectedMentor.price}</span>
+                  <span className="flex items-center text-xs text-gray-700 font-medium">
+                    <Star className="w-4 h-4 text-amber-400 mr-1" fill="#fbbf24" />
+                    {selectedMentor.rating}
+                  </span>
+                </div>
                 <button
                   onClick={handleBookSession}
-                  className="w-full bg-amber-500 text-black py-3 rounded-lg font-medium hover:bg-amber-600 transition-colors flex items-center justify-center space-x-2"
+                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2 text-base"
                 >
-                  <Calendar className="w-4 h-4" />
-                  <span>Book a Session</span>
-                </button>
-                <button
-                  onClick={() => setSelectedMentor(null)}
-                  className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors"
-                >
-                  Close
+                  <span>Select times</span>
                 </button>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </SidePeekPanel>
     </div>
   );
 };
