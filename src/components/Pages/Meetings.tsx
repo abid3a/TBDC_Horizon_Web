@@ -4,6 +4,7 @@ import MeetingCard from '../Common/MeetingCard';
 import FilterBar from '../Common/FilterBar';
 import SidePeekPanel from '../Common/SidePeekPanel';
 import mockData from '../../data/mockData.json';
+import ConnectionCard from '../Common/ConnectionCard';
 
 function getMeetingCategory(meeting: any): 'Past' | 'Today' | 'Upcoming' {
   const today = new Date();
@@ -18,9 +19,10 @@ const Meetings: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [selectedMeeting, setSelectedMeeting] = useState<any>(null);
+  const [selectedConnection, setSelectedConnection] = useState<any>(null); // NEW: Track selected connection
   const [openSections, setOpenSections] = useState<Record<'Past' | 'Today' | 'Upcoming', boolean>>({ Past: false, Today: true, Upcoming: true });
 
-  const { meetings } = mockData;
+  const { meetings, connections } = mockData;
   const filters = ['Review', 'Workshop', 'Strategy', 'Planning'];
 
   const filteredMeetings = meetings.filter((meeting: any) => {
@@ -95,13 +97,13 @@ const Meetings: React.FC = () => {
         ))}
       </div>
 
-      {/* Side Peek Panel */}
+      {/* Side Peek Panel for Meeting Details */}
       <SidePeekPanel
-        isOpen={!!selectedMeeting}
+        isOpen={!!selectedMeeting && !selectedConnection}
         onClose={() => setSelectedMeeting(null)}
         title="Meeting Details"
       >
-        {selectedMeeting && (
+        {selectedMeeting && !selectedConnection && (
           <div className="p-6">
             <div className="mb-6">
               <h2 className="text-xl font-bold text-gray-900 mb-2">
@@ -132,28 +134,43 @@ const Meetings: React.FC = () => {
               <p className="text-gray-600 leading-relaxed">{selectedMeeting.description}</p>
             </div>
 
+            {/* Attendees (card style if also a connection) */}
             <div className="bg-gray-50 rounded-lg p-4">
               <h3 className="font-semibold text-gray-900 mb-3">
                 Attendees ({Array.isArray(selectedMeeting.attendees) ? selectedMeeting.attendees.length : 0})
               </h3>
               <div className="space-y-3">
-                {Array.isArray(selectedMeeting.attendees) && selectedMeeting.attendees.map((attendee: any, index: number) => (
-                  attendee && (
-                    <div key={index} className="flex items-center space-x-3">
-                      {attendee.avatar && (
-                        <img
-                          src={attendee.avatar}
-                          alt={attendee.name || 'Attendee'}
-                          className="w-10 h-10 rounded-full"
-                        />
-                      )}
-                      <div>
-                        <p className="font-medium text-gray-900">{attendee.name || 'Unknown'}</p>
-                        <p className="text-sm text-gray-600">{attendee.title || ''}</p>
+                {Array.isArray(selectedMeeting.attendees) && selectedMeeting.attendees.map((attendee: any, index: number) => {
+                  if (!attendee) return null;
+                  const connection = connections.find((conn: any) => conn.name === attendee.name);
+                  if (connection) {
+                    return (
+                      <ConnectionCard
+                        key={index}
+                        connection={connection}
+                        isFavorite={false}
+                        onToggleFavorite={() => {}}
+                        onClick={() => setSelectedConnection(connection)}
+                      />
+                    );
+                  } else {
+                    return (
+                      <div key={index} className="flex items-center space-x-3">
+                        {attendee.avatar && (
+                          <img
+                            src={attendee.avatar}
+                            alt={attendee.name || 'Attendee'}
+                            className="w-10 h-10 rounded-full"
+                          />
+                        )}
+                        <div>
+                          <p className="font-medium text-gray-900">{attendee.name || 'Unknown'}</p>
+                          <p className="text-sm text-gray-600">{attendee.title || ''}</p>
+                        </div>
                       </div>
-                    </div>
-                  )
-                ))}
+                    );
+                  }
+                })}
               </div>
             </div>
 
@@ -163,6 +180,72 @@ const Meetings: React.FC = () => {
               </button>
               <button className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors">
                 Add to Calendar
+              </button>
+              <button className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                onClick={() => {
+                  setSelectedMeeting(null);
+                }}
+              >
+                Back to Meetings
+              </button>
+            </div>
+          </div>
+        )}
+      </SidePeekPanel>
+
+      {/* Side Peek Panel for Connection Details */}
+      <SidePeekPanel
+        isOpen={!!selectedConnection}
+        onClose={() => setSelectedConnection(null)}
+        title="Connection Details"
+      >
+        {selectedConnection && (
+          <div className="p-6">
+            <div className="flex items-center space-x-4 mb-6">
+              <img
+                src={selectedConnection.avatar}
+                alt={selectedConnection.name}
+                className="w-20 h-20 rounded-full"
+              />
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">{selectedConnection.name}</h2>
+                <p className="text-gray-600">{selectedConnection.title}</p>
+                <p className="text-gray-500">{selectedConnection.company}</p>
+                <div className="flex items-center mt-2 text-sm text-gray-500">
+                  {selectedConnection.location}
+                </div>
+              </div>
+            </div>
+            <div className="mb-6">
+              <h3 className="font-semibold text-gray-900 mb-3">Bio</h3>
+              <p className="text-gray-600 leading-relaxed">{selectedConnection.bio}</p>
+            </div>
+            <div className="mb-6">
+              <h3 className="font-semibold text-gray-900 mb-3">Expertise</h3>
+              <div className="flex flex-wrap gap-2">
+                {selectedConnection.expertise.map((skill: string, index: number) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="mb-6">
+              <h3 className="font-semibold text-gray-900 mb-3">Notes</h3>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <p className="text-sm text-amber-800">{selectedConnection.notes}</p>
+              </div>
+            </div>
+            <div className="mt-6 space-y-3">
+              <button className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                onClick={() => {
+                  setSelectedConnection(null);
+                }}
+              >
+                Back to Meeting
               </button>
             </div>
           </div>

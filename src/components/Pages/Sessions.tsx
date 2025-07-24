@@ -4,6 +4,7 @@ import SessionCard from '../Common/SessionCard';
 import FilterBar from '../Common/FilterBar';
 import SidePeekPanel from '../Common/SidePeekPanel';
 import mockData from '../../data/mockData.json';
+import ConnectionCard from '../Common/ConnectionCard';
 
 function getSessionCategory(session: any): 'Past' | 'Today' | 'Upcoming' {
   const today = new Date();
@@ -18,9 +19,10 @@ const Sessions: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [selectedSession, setSelectedSession] = useState<any>(null);
+  const [selectedConnection, setSelectedConnection] = useState<any>(null); // NEW: Track selected connection
   const [openSections, setOpenSections] = useState<Record<'Past' | 'Today' | 'Upcoming', boolean>>({ Past: false, Today: true, Upcoming: true });
 
-  const { sessions } = mockData;
+  const { sessions, connections } = mockData;
   const filters = ['Strategy', 'Product', 'Finance', 'Marketing'];
 
   const filteredSessions = sessions.filter((session: any) => {
@@ -41,6 +43,11 @@ const Sessions: React.FC = () => {
 
   const toggleSection = (section: 'Past' | 'Today' | 'Upcoming') => {
     setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  // Find the associated connection for a session
+  const getConnectionForSession = (sessionId: string) => {
+    return connections.find((conn: any) => conn.linkedSessions.includes(sessionId));
   };
 
   return (
@@ -95,13 +102,13 @@ const Sessions: React.FC = () => {
         ))}
       </div>
 
-      {/* Side Peek Panel */}
+      {/* Side Peek Panel for Session Details */}
       <SidePeekPanel
-        isOpen={!!selectedSession}
+        isOpen={!!selectedSession && !selectedConnection}
         onClose={() => setSelectedSession(null)}
         title="Session Details"
       >
-        {selectedSession && (
+        {selectedSession && !selectedConnection && (
           <div className="p-6">
             <div className="mb-6">
               <h2 className="text-xl font-bold text-gray-900 mb-2">
@@ -132,21 +139,68 @@ const Sessions: React.FC = () => {
               <p className="text-gray-600 leading-relaxed">{selectedSession.description}</p>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-900 mb-3">Mentor</h3>
-              <div className="flex items-center space-x-4">
-                <img
-                  src={selectedSession.mentor.avatar}
-                  alt={selectedSession.mentor.name}
-                  className="w-12 h-12 rounded-full"
-                />
-                <div>
-                  <p className="font-medium text-gray-900">{selectedSession.mentor.name}</p>
-                  <p className="text-sm text-gray-600">{selectedSession.mentor.title}</p>
-                  <p className="text-sm text-gray-500">{selectedSession.mentor.company}</p>
+            {/* Associated Connection */}
+            {(() => {
+              const connection = getConnectionForSession(selectedSession.id);
+              if (!connection) return null;
+              return (
+                <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                  <h3 className="font-semibold text-gray-900 mb-3">Connection</h3>
+                  <button
+                    className="flex items-center space-x-4 w-full text-left hover:bg-amber-50 transition p-2 rounded-lg"
+                    onClick={() => setSelectedConnection(connection)}
+                  >
+                    <img
+                      src={connection.avatar}
+                      alt={connection.name}
+                      className="w-12 h-12 rounded-full"
+                    />
+                    <div>
+                      <p className="font-medium text-gray-900">{connection.name}</p>
+                      <p className="text-sm text-gray-600">{connection.title}</p>
+                      <p className="text-sm text-gray-500">{connection.company}</p>
+                    </div>
+                  </button>
                 </div>
-              </div>
-            </div>
+              );
+            })()}
+
+            {/* Mentor (card style if also a connection) */}
+            {(() => {
+              // Try to find a connection with the same name as the mentor
+              const mentor = selectedSession.mentor;
+              const connection = connections.find((conn: any) => conn.name === mentor.name);
+              if (connection) {
+                return (
+                  <div className="mb-6">
+                    <ConnectionCard
+                      connection={connection}
+                      isFavorite={false}
+                      onToggleFavorite={() => {}}
+                      onClick={() => setSelectedConnection(connection)}
+                    />
+                  </div>
+                );
+              } else {
+                return (
+                  <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                    <h3 className="font-semibold text-gray-900 mb-3">Mentor</h3>
+                    <div className="flex items-center space-x-4">
+                      <img
+                        src={mentor.avatar}
+                        alt={mentor.name}
+                        className="w-12 h-12 rounded-full"
+                      />
+                      <div>
+                        <p className="font-medium text-gray-900">{mentor.name}</p>
+                        <p className="text-sm text-gray-600">{mentor.title}</p>
+                        <p className="text-sm text-gray-500">{mentor.company}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+            })()}
 
             <div className="mt-6 space-y-3">
               <button className="w-full bg-amber-500 text-black py-3 rounded-lg font-medium hover:bg-amber-600 transition-colors">
@@ -154,6 +208,72 @@ const Sessions: React.FC = () => {
               </button>
               <button className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors">
                 Reschedule
+              </button>
+              <button className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                onClick={() => {
+                  setSelectedSession(null);
+                }}
+              >
+                Back to Sessions
+              </button>
+            </div>
+          </div>
+        )}
+      </SidePeekPanel>
+
+      {/* Side Peek Panel for Connection Details */}
+      <SidePeekPanel
+        isOpen={!!selectedConnection}
+        onClose={() => setSelectedConnection(null)}
+        title="Connection Details"
+      >
+        {selectedConnection && (
+          <div className="p-6">
+            <div className="flex items-center space-x-4 mb-6">
+              <img
+                src={selectedConnection.avatar}
+                alt={selectedConnection.name}
+                className="w-20 h-20 rounded-full"
+              />
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">{selectedConnection.name}</h2>
+                <p className="text-gray-600">{selectedConnection.title}</p>
+                <p className="text-gray-500">{selectedConnection.company}</p>
+                <div className="flex items-center mt-2 text-sm text-gray-500">
+                  {selectedConnection.location}
+                </div>
+              </div>
+            </div>
+            <div className="mb-6">
+              <h3 className="font-semibold text-gray-900 mb-3">Bio</h3>
+              <p className="text-gray-600 leading-relaxed">{selectedConnection.bio}</p>
+            </div>
+            <div className="mb-6">
+              <h3 className="font-semibold text-gray-900 mb-3">Expertise</h3>
+              <div className="flex flex-wrap gap-2">
+                {selectedConnection.expertise.map((skill: string, index: number) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="mb-6">
+              <h3 className="font-semibold text-gray-900 mb-3">Notes</h3>
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                <p className="text-sm text-amber-800">{selectedConnection.notes}</p>
+              </div>
+            </div>
+            <div className="mt-6 space-y-3">
+              <button className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                onClick={() => {
+                  setSelectedConnection(null);
+                }}
+              >
+                Back to Session
               </button>
             </div>
           </div>

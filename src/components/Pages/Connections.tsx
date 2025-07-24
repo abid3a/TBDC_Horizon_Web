@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, MessageSquare, Heart } from 'lucide-react';
+import { BookOpen, MessageSquare, Heart, Calendar, Clock, MapPin } from 'lucide-react';
 import FilterBar from '../Common/FilterBar';
 import SidePeekPanel from '../Common/SidePeekPanel';
 import mockData from '../../data/mockData.json';
@@ -8,6 +8,7 @@ import ConnectionCard from '../Common/ConnectionCard';
 const Connections: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedConnection, setSelectedConnection] = useState<any>(null);
+  const [selectedSession, setSelectedSession] = useState<any>(null); // NEW: Track selected session
   const [favorites, setFavorites] = useState<string[]>(mockData.favorites || []);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
 
@@ -24,6 +25,10 @@ const Connections: React.FC = () => {
 
   const handleConnectionClick = (connection: any) => {
     setSelectedConnection(connection);
+  };
+
+  const handleSessionClick = (session: any) => {
+    setSelectedSession(session);
   };
 
   const getLinkedSessionsForConnection = (sessionIds: string[]) => {
@@ -73,13 +78,13 @@ const Connections: React.FC = () => {
         </div>
       </div>
 
-      {/* Side Peek Panel */}
+      {/* Side Peek Panel for Connection Details */}
       <SidePeekPanel
-        isOpen={!!selectedConnection}
+        isOpen={!!selectedConnection && !selectedSession}
         onClose={() => setSelectedConnection(null)}
         title="Connection Details"
       >
-        {selectedConnection && (
+        {selectedConnection && !selectedSession && (
           <div className="p-6">
             {/* Profile Header */}
             <div className="flex items-center space-x-4 mb-6">
@@ -93,7 +98,6 @@ const Connections: React.FC = () => {
                 <p className="text-gray-600">{selectedConnection.title}</p>
                 <p className="text-gray-500">{selectedConnection.company}</p>
                 <div className="flex items-center mt-2 text-sm text-gray-500">
-                  {/* MapPin className="w-4 h-4 mr-1" /> */}
                   {selectedConnection.location}
                 </div>
               </div>
@@ -139,13 +143,17 @@ const Connections: React.FC = () => {
               </h3>
               <div className="space-y-2">
                 {getLinkedSessionsForConnection(selectedConnection.linkedSessions).map((session: any) => (
-                  <div key={session.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                  <button
+                    key={session.id}
+                    className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg w-full text-left hover:bg-amber-50 transition cursor-pointer"
+                    onClick={() => handleSessionClick(session)}
+                  >
                     <BookOpen className="w-4 h-4 text-gray-400" />
                     <div>
                       <p className="font-medium text-gray-900">{session.title}</p>
                       <p className="text-sm text-gray-500">{session.date}</p>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -165,6 +173,78 @@ const Connections: React.FC = () => {
               </button>
               <button className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors">
                 Schedule Meeting
+              </button>
+            </div>
+          </div>
+        )}
+      </SidePeekPanel>
+
+      {/* Side Peek Panel for Session Details */}
+      <SidePeekPanel
+        isOpen={!!selectedSession}
+        onClose={() => setSelectedSession(null)}
+        title="Session Details"
+      >
+        {selectedSession && (
+          <div className="p-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-2">
+                {selectedSession.title}
+              </h2>
+              <span className="inline-block px-3 py-1 bg-amber-100 text-amber-800 text-sm font-medium rounded-full">
+                {selectedSession.type}
+              </span>
+            </div>
+
+            <div className="space-y-4 mb-6">
+              <div className="flex items-center text-gray-600">
+                <Calendar className="w-5 h-5 mr-3" />
+                <span>{selectedSession.date} at {selectedSession.time}</span>
+              </div>
+              <div className="flex items-center text-gray-600">
+                <Clock className="w-5 h-5 mr-3" />
+                <span>{selectedSession.duration}</span>
+              </div>
+              <div className="flex items-center text-gray-600">
+                <MapPin className="w-5 h-5 mr-3" />
+                <span>{selectedSession.location}</span>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="font-semibold text-gray-900 mb-3">Description</h3>
+              <p className="text-gray-600 leading-relaxed">{selectedSession.description}</p>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h3 className="font-semibold text-gray-900 mb-3">Mentor</h3>
+              <div className="flex items-center space-x-4">
+                <img
+                  src={selectedSession.mentor.avatar}
+                  alt={selectedSession.mentor.name}
+                  className="w-12 h-12 rounded-full"
+                />
+                <div>
+                  <p className="font-medium text-gray-900">{selectedSession.mentor.name}</p>
+                  <p className="text-sm text-gray-600">{selectedSession.mentor.title}</p>
+                  <p className="text-sm text-gray-500">{selectedSession.mentor.company}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-3">
+              <button className="w-full bg-amber-500 text-black py-3 rounded-lg font-medium hover:bg-amber-600 transition-colors">
+                Join Session
+              </button>
+              <button className="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                Reschedule
+              </button>
+              <button className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors"
+                onClick={() => {
+                  setSelectedSession(null);
+                }}
+              >
+                Back to Connection
               </button>
             </div>
           </div>
